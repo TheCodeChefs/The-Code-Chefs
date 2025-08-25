@@ -1,19 +1,55 @@
-<header class="header">
-  <div class="container">
-    <nav class="nav">
-      <a class="nav-logo" href="./index.html" aria-label="Site logo">
-        <svg class="nav-logo-icon" width="100" height="30">
-          <use href="{=$icon-path}"></use>
+<div class="container">
+  <header class="header">
+    <div class="mobile-menu">
+      <button class="close-button">
+        <svg
+          class="menu-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <use href="./svg/symbol-defs.svg#icon-close-button"></use>
         </svg>
-      </a>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a class="nav-link {=$highlight-act}" href="./page-2.html">Page 2</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {=$highlight-curr}" href="./page-3.html">Page 3</a>
-        </li>
-      </ul>
+      </button>
+      <nav class="nav-menu">
+        <a href="./">Home</a>
+        <a href="./favorites">Favorites</a>
+      </nav>
+    </div>
+    <nav class="nav-menu">
+      <a href="./">Home</a>
+      <a href="./favorites">Favorites</a>
     </nav>
-  </div>
-</header>
+    <div class="logo">
+      <a>
+        <p><span>tasty</span>treats</p>
+      </a>
+    </div>
+    <div class="icons-area">
+      <button class="basket-button">
+        <svg
+          class="basket-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <use href="./svg/symbol-defs.svg#icon-basket"></use>
+        </svg>
+      </button>
+      <button class="basket-button hamburger-button">
+        <svg
+          class="basket-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <use href="./svg/symbol-defs.svg#icon-hamburger-menu"></use>
+        </svg>
+      </button>
+      <input type="checkbox" class="toggle" id="toggle" />
+      <label for="toggle" class="toggle-label"></label>
+    </div>
+  </header>
+</div>
+<script type="module" src="./js/header.js"></script>

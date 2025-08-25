@@ -2,24 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/The-Code-Chefs/favicon.svg" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tasty Treats - Home</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
-    <script type="module" crossorigin src="/The-Code-Chefs/index.js"></script>
+    <title>Tasty Treats - favorites</title>
+    <script type="module" crossorigin src="/The-Code-Chefs/favorites.js"></script>
     <link rel="modulepreload" crossorigin href="/The-Code-Chefs/assets/popup_menu-DPnVBNis.js">
-    <link rel="modulepreload" crossorigin href="/The-Code-Chefs/assets/vendor-CHgafnuo.js">
     <link rel="stylesheet" crossorigin href="/The-Code-Chefs/assets/popup_menu-BdveEKeG.css">
-    <link rel="stylesheet" crossorigin href="/The-Code-Chefs/assets/vendor-BZ_WhpHG.css">
+    <link rel="stylesheet" crossorigin href="/The-Code-Chefs/assets/favorites-BhUBmiAA.css">
   </head>
   <body data-theme="light">
     <div class="container">
@@ -79,183 +68,173 @@
 
 
     <main>
-      <!-- Loads the specified .html file -->
-      <div class="container">
-  <div class="home-hero-container">
-    <div class="home-header-area">
-      <h1>
-        Learn to Cook
-        <span
-          >Tasty <br />
-          Treats'</span
-        >
-        Customizable Masterclass
-      </h1>
-      <h4>
-        TastyTreats - Customize Your Meal with Ingredient Options and
-        Step-by-Step Video Guides.
-      </h4>
-      <button class="primary-button order-now-button">Order now</button>
+      <section class="favorites-hero">
+  <div class="container">
+    <div class="f-hero__media">
+      <picture>
+        <!-- Desktop (>=1280px) -->
+        <source
+          media="(min-width: 1280px)"
+          srcset="/The-Code-Chefs/assets/f-hero-desktop@1x-BfjslYV-.jpg 1x, /The-Code-Chefs/assets/f-hero-desktop@2x-D3ay7Et5.jpg 2x"
+        />
+        <!-- Tablet (>=768px) -->
+        <source
+          media="(min-width: 768px)"
+          srcset="/The-Code-Chefs/assets/f-hero-tablet@1x-BazouqTc.jpg 1x, /The-Code-Chefs/assets/f-hero-tablet@2x-DAu1ySwy.jpg 2x"
+        />
+        <!-- Mobile default (<768px) -->
+        <img
+          class="f-hero__img"
+          src="/The-Code-Chefs/assets/f-hero-mobile@1x-DaklH0Ap.jpg"
+          srcset="/The-Code-Chefs/assets/f-hero-mobile@1x-DaklH0Ap.jpg 1x, /The-Code-Chefs/assets/f-hero-mobile@2x-BsksCnQP.jpg 2x"
+          alt="Öne çıkan lezzetli yemek sunumu"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
     </div>
-    <div class="swiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide slide-container">
-          <img class="first-image" src="/The-Code-Chefs/assets/person-1-Cmd3RRSf.png" />
-          <img class="secondary-image" src="/The-Code-Chefs/assets/plate-food-1-BnjmcKn-.png" />
-          <p class="main-image-text">
-            Grilled, smoky, delicious <br />
-            barbecue
-          </p>
-          <span class="secondary-image-text">Spanish </span>
-          <img class="third-image" src="/The-Code-Chefs/assets/whole-food-1-CYHDdRRn.png" />
-        </div>
-        <div class="swiper-slide slide-container">
-          <img class="first-image" src="/The-Code-Chefs/assets/person-2-CNDYYm0G.png" />
-          <p class="main-image-text second-main-image-text">
-            Hot, cheesy and <br />
-            satisfying pizza
-          </p>
-          <span class="secondary-image-text">Italian </span>
-          <img class="secondary-image" src="/The-Code-Chefs/assets/plate-food-2-Bzz8SmW_.png" />
-          <img class="third-image" src="/The-Code-Chefs/assets/whole-food-2-BVycKB0a.png" />
-        </div>
-        <div class="swiper-slide slide-container">
-          <img class="first-image" src="/The-Code-Chefs/assets/person-3-CUNuX0VU.png" />
-          <p class="main-image-text">Fluffy and sweet pancakes</p>
-          <span class="secondary-image-text">American </span>
-          <img class="secondary-image" src="/The-Code-Chefs/assets/plate-food-3-CjuvEd9t.png" />
-          <img class="third-image" src="/The-Code-Chefs/assets/whole-food-3-DHs6_jVs.png" />
-        </div>
-      </div>
-      <div class="swiper-pagination swiper-dots"></div>
+  </div>
+</section>
+
+      <section class="favorites-filter">
+  <div class="category-wrapper">
+    <div class="category-fixed">
+      <button id="all-categories-btn" class="category active">
+        All categories
+      </button>
     </div>
-    <div class="order-now">
-      <h5>ORDER NOW</h5>
-      <button class="close-button order-now-close-button">
-        <svg
-          class="menu-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-        >
-          <use href="/The-Code-Chefs/assets/symbol-defs-BO_eMKFu.svg#icon-close-button"></use>
+    <div id="category-scroll" class="category-scroll">
+      <div id="category-list" class="category-list"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="favorites-list" class="favorites-list"></div>
+
+    <div id="pagination-container" class="pagination" aria-label="Pagination">
+      <!-- << -->
+      <button
+        class="page-icon first"
+        type="button"
+        aria-label="First page"
+        disabled
+      >
+        <!-- ENABLED/BASE (2 adet) -->
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+          ></use>
+        </svg>
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+          ></use>
+        </svg>
+        <!-- DISABLED/LIGHT: GRAY (2 adet) -->
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+          ></use>
+        </svg>
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+          ></use>
         </svg>
       </button>
-      <label class="order-label">Name</label>
-      <input type="text" class="order-input" />
-      <label class="order-label">Phone number</label>
-      <input type="text" class="order-input" />
-      <label class="order-label">Email</label>
-      <input type="text" class="order-input" />
-      <label class="order-label">Comment</label>
-      <textarea class="order-textarea order-input"></textarea>
-      <button class="secondary-button order-button">Send</button>
+
+      <!-- < -->
+      <button
+        class="page-icon prev"
+        type="button"
+        aria-label="Previous page"
+        disabled
+      >
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon"
+          ></use>
+        </svg>
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-left-icon-gray"
+          ></use>
+        </svg>
+      </button>
+
+      <!-- SAYI BUTONLARI (JS doldurur) -->
+      <div class="page-numbers" role="group" aria-label="Page numbers"></div>
+
+      <!-- > -->
+      <button class="page-icon next" type="button" aria-label="Next page">
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+          ></use>
+        </svg>
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+          ></use>
+        </svg>
+      </button>
+
+      <!-- >> -->
+      <button class="page-icon last" type="button" aria-label="Last page">
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+          ></use>
+        </svg>
+        <svg class="icon icon-base" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon"
+          ></use>
+        </svg>
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+          ></use>
+        </svg>
+        <svg class="icon icon-gray" aria-hidden="true" focusable="false">
+          <use
+            href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+            xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-pg-right-icon-gray"
+          ></use>
+        </svg>
+      </button>
+    </div>
+
+    <div id="empty-message" class="empty-message hidden">
+      <svg width="80" height="80" aria-hidden="true" focusable="false">
+        <use
+          href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-elements"
+          xlink:href="/The-Code-Chefs/assets/icons-B6tbMTwW.svg#icon-elements"
+        ></use>
+      </svg>
+      <p>
+        It appears that you haven't added any recipes to your favorites yet. To
+        get started, you can add recipes that you like to your favorites for
+        easier access in the future.
+      </p>
     </div>
   </div>
-</div>
-
-      <div class="filter-main">
-  <!-- Sol filtre paneli -->
-  <aside class="filter-sidebar">
-    <button class="all-categories-button">All categories</button>
-    <ul class="home-category-list" id="category-list">
-      <!-- JS ile doldurulacak -->
-    </ul>
-
-    <!-- Popüler tarifler buraya alındı -->
-    <div class="popular-recipes">
-      <h4 class="popular-recipes-heading">Popular Recipes</h4>
-      <ul class="popular-list" id="popular-list">
-        <!-- JS ile doldurulacak -->
-      </ul>
-    </div>
-  </aside>
-
-  <!-- Sağ içerik -->
-  <div class="filter-content">
-    <!-- Filtre barı -->
-    <div class="filters">
-      <div class="filter-group search">
-        <label for="search-input">Search</label>
-        <div class="search-with-icon">
-          <svg class="icon-search-icon" viewBox="0 0 24 24">
-            <use href="/The-Code-Chefs/assets/symbol-defs-BO_eMKFu.svg#icon-search-icon"></use>
-          </svg>
-          <input
-            type="text"
-            placeholder="Enter Text"
-            class="search-input"
-            id="search-input"
-          />
-        </div>
-      </div>
-
-      <div class="filter-group select-time">
-        <label for="time-select">Time</label>
-        <div class="select-with-arrow">
-          <select class="select-filter" id="time-select"></select>
-          <svg
-            class="icon-arrow-down"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="rgba(5, 5, 5, 0.3)"
-          >
-            <use href="/The-Code-Chefs/assets/symbol-defs-BO_eMKFu.svg#icon-arrow-down"></use>
-          </svg>
-        </div>
-      </div>
-
-      <div class="filter-group select-area">
-        <label for="area-select">Area</label>
-        <div class="select-with-arrow">
-          <select class="select-filter" id="area-select">
-            <!-- JS ile option'lar eklenecek -->
-          </select>
-          <svg
-            class="icon-arrow-down"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="rgba(5, 5, 5, 0.3)"
-          >
-            <use href="/The-Code-Chefs/assets/symbol-defs-BO_eMKFu.svg#icon-arrow-down"></use>
-          </svg>
-        </div>
-      </div>
-
-      <div class="filter-group select-ingredients">
-        <label for="ingredient-select">Ingredients</label>
-        <div class="select-with-arrow">
-          <select class="select-filter" id="ingredient-select">
-            <!-- JS ile option'lar eklenecek -->
-          </select>
-          <svg
-            class="icon-arrow-down"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="rgba(5, 5, 5, 0.3)"
-          >
-            <use href="/The-Code-Chefs/assets/symbol-defs-BO_eMKFu.svg#icon-arrow-down"></use>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- HİZALI RESET BUTTON -->
-    <button class="reset-filter" id="reset-button">✖ Reset the filter</button>
-    <!-- Tarif kartları -->
-    <div class="recipe-grid" id="recipe-grid">
-      <!-- JS ile kartlar buraya eklenecek -->
-    </div>
-
-    <div class="empty-recipe-grid" id="empty-recipe-grid"></div>
-
-    <!-- Sayfalama -->
-    <div id="pagination" class="pagination-container"></div>
-    <!-- JS ile sayfa butonları gelecek -->
-  </div>
-</div>
+</section>
 
     </main>
 
+    <!-- Popup: HTML partial -->
     <!-- Popup Overlay (başta gizli) -->
 <div
   id="popup-overlay"

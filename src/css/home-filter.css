@@ -468,11 +468,6 @@ select option {
   border-color: rgba(5, 5, 5, 0.6);
 }
 
-.icon-heart,
-.icon-white-heart {
-  color: #fff;
-}
-
 @media (min-width: 768px) {
   .filter-main {
     flex-direction: row;

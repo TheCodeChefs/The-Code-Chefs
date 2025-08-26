@@ -27,7 +27,7 @@ function format2Trunc(v) {
   return t.toFixed(2);
 }
 
-// Güvenli background-image setter (tırnak/paren/ters slash vb. temizler)
+// Güvenli background-image setter
 function setBgImage(el, url) {
   if (!el) return;
   if (!url) {
@@ -49,6 +49,52 @@ const svgIcon = (name, className = '') =>
   `<svg class="icon ${className}" aria-hidden="true" focusable="false">
      <use href="${SPRITE_PATH}#icon-${name}"></use>
    </svg>`;
+
+/* = Basit yıldız = */
+const starFilledHTML = `<span class="star filled">${svgIcon('Star')}</span>`;
+const starEmptyHTML = `<span class="star empty">${svgIcon(
+  'Star-empty'
+)}</span>`;
+
+/* Boş yıldızların rengini tema değişkeninden oku ve uygula */
+function enforceEmptyStarColor(root) {
+  if (!root) return;
+
+  // Tema değişkenini al (yoksa light/dark fallback)
+  const docEl = document.documentElement;
+  let color = getComputedStyle(docEl).getPropertyValue('--star-empty').trim();
+  if (!color) {
+    color =
+      docEl.getAttribute('data-theme') === 'dark'
+        ? 'rgba(255,255,255,0.2)'
+        : 'rgba(0,0,0,0.2)';
+  }
+
+  // <svg> ve <use>
+  qsa('.star.empty .icon', root).forEach(svg => {
+    svg.style.fill = color;
+  });
+  qsa('.star.empty use', root).forEach(u => {
+    u.setAttribute('fill', color);
+  });
+
+  // Inline path'leri ez (external sprite'ta path görünmeyebilir, sorun değil)
+  qsa('.star.empty .icon path', root).forEach(p => {
+    p.setAttribute('fill', color);
+    p.setAttribute('stroke', 'none');
+  });
+}
+
+function renderStaticStars(container, val) {
+  if (!container) return;
+  const n = Number(val) || 0;
+  const full = Math.min(5, Math.max(0, Math.floor(n)));
+  container.classList.add('star-row');
+  container.innerHTML = `${starFilledHTML.repeat(full)}${starEmptyHTML.repeat(
+    5 - full
+  )}`;
+  enforceEmptyStarColor(container);
+}
 
 /* = Favorites (LS) = */
 function getFavorites() {
@@ -123,8 +169,8 @@ function toggleFavoriteById(id, recipeObjForAdd) {
 
 /* = Popup state/refs = */
 let currentRecipe = null;
-let currentRating = 0; // ⭐ rating overlay için
-let ratingSubmitting = false; // çift tıklama kilidi
+let currentRating = 0;
+let ratingSubmitting = false;
 window.__currentRecipeId = '';
 
 function refs() {
@@ -154,20 +200,6 @@ function refs() {
   };
 }
 
-/* = Basit yıldız = */
-const starFilledHTML = `<span class="star filled">${svgIcon('Star')}</span>`;
-const starEmptyHTML = `<span class="star empty">${svgIcon(
-  'Star-empty'
-)}</span>`;
-function renderStaticStars(container, val) {
-  if (!container) return;
-  const n = Number(val) || 0;
-  const full = Math.min(5, Math.max(0, Math.floor(n)));
-  container.innerHTML = `<span class="star-row">
-    ${starFilledHTML.repeat(full)}${starEmptyHTML.repeat(5 - full)}
-  </span>`;
-}
-
 /* = Render = */
 function renderDetails(recipe) {
   const r = refs();
@@ -175,7 +207,7 @@ function renderDetails(recipe) {
   const id = String(getIdSafe(recipe));
   if (id) {
     r.content.dataset.recipeId = id;
-    r.ratingOverlay && (r.ratingOverlay.dataset.recipeId = id); // ⭐ rating overlay id
+    r.ratingOverlay && (r.ratingOverlay.dataset.recipeId = id);
     window.__currentRecipeId = id;
   }
   r.pmTitle && (r.pmTitle.textContent = recipe.title || 'Untitled');
@@ -276,7 +308,6 @@ document.addEventListener('click', e => {
     r.pmIframe && (r.pmIframe.src = '');
   }
 });
-// Escape: önce rating açıksa onu kapat, değilse popup'ı
 window.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   const r = refs();
@@ -301,7 +332,6 @@ document.addEventListener('click', e => {
 });
 
 /* ============ ⭐ Rating overlay ============ */
-// yıldızları temizle/boyama
 function clearRatingStars(starsRoot) {
   if (!starsRoot) return;
   qsa('svg path', starsRoot).forEach(p => p.setAttribute('fill', '#dcdcdc'));
@@ -329,11 +359,19 @@ function validateRatingForm(r) {
     r.ratingHint.textContent = ok ? '' : 'Enter valid email and select rating.';
 }
 
-// Aç (ID’yi garantiye al)
+// Tema değişince boş yıldızları yeniden boya
+const __themeObserver = new MutationObserver(() => {
+  const r = refs();
+  if (r?.pmStars) enforceEmptyStarColor(r.pmStars);
+});
+__themeObserver.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['data-theme'],
+});
+
 document.addEventListener('click', e => {
   const r = refs();
   if (e.target.closest('#pm-rate-btn')) {
-    // overlay’e id’yi yeniden yaz
     const idNow =
       r.content?.dataset?.recipeId || window.__currentRecipeId || '';
     if (idNow && r.ratingOverlay)
@@ -349,7 +387,6 @@ document.addEventListener('click', e => {
     show(r.ratingOverlay);
     return;
   }
-  // Kapat
   if (
     e.target.closest('#rating-close') ||
     (r.ratingOverlay && e.target === r.ratingOverlay)
@@ -358,13 +395,11 @@ document.addEventListener('click', e => {
   }
 });
 
-// E-posta girildikçe buton aktif/pasif
 document.addEventListener('input', e => {
   const r = refs();
   if (e.target === r.ratingEmail) validateRatingForm(r);
 });
 
-// Yarım/dolu seçimi
 document.addEventListener('click', e => {
   const r = refs();
   const halfBtn = e.target.closest('.half-btn');
@@ -377,14 +412,11 @@ document.addEventListener('click', e => {
   validateRatingForm(r);
 });
 
-// Gönder
 document.addEventListener('click', async e => {
   const r = refs();
   if (!e.target.closest('#rating-send')) return;
-
   if (ratingSubmitting) return;
 
-  // ID’yi 3 farklı yerden güvenli al
   const id =
     r.ratingOverlay?.dataset?.recipeId ||
     r.content?.dataset?.recipeId ||
@@ -405,7 +437,7 @@ document.addEventListener('click', async e => {
 
   try {
     ratingSubmitting = true;
-    validateRatingForm(r); // butonu kilitle
+    validateRatingForm(r);
     r.ratingHint && (r.ratingHint.textContent = '');
 
     const url = `${API_ROOT}/recipes/${encodeURIComponent(id)}/rating`;
@@ -424,13 +456,11 @@ document.addEventListener('click', async e => {
       throw new Error(`${msg} (HTTP ${res.status})`);
     }
 
-    // Başarılı
     if (r.ratingHint) {
       r.ratingHint.textContent = 'Thanks for rating!';
       r.ratingHint.classList.add('ok');
     }
 
-    // Güncel rating'i çekip popup üstündeki değeri/ikonları güncelle
     try {
       const fresh = await fetch(
         `${API_ROOT}/recipes/${encodeURIComponent(id)}`
@@ -448,6 +478,6 @@ document.addEventListener('click', async e => {
     }
   } finally {
     ratingSubmitting = false;
-    validateRatingForm(r); // form durumunu eski haline getir
+    validateRatingForm(r);
   }
 });

@@ -193,12 +193,23 @@
   fill: currentColor;
   stroke: none;
 }
-.star-row .star.empty .icon {
-  color: var(--input-text-color2);
-}
-.star-row .star.empty .icon * {
-  fill: currentColor;
-  stroke: none;
+
+/* ====== BOŞ YILDIZ TEMA DEĞİŞKENİ (EKLENDİ) ====== */
+:root,
+[data-theme='light'] {
+  --star-empty: rgba(0, 0, 0, 0.2);
+} /* light: gri %20 */
+[data-theme='dark'] {
+  --star-empty: rgba(255, 255, 255, 0.2);
+} /* dark: beyaz %20 */
+
+/* Boş yıldızlar tek yerden yönetilir */
+.star-row .star.empty .icon,
+.star-row .star.empty .icon *,
+.star-row .star.empty .icon use {
+  color: var(--star-empty) !important;
+  fill: var(--star-empty) !important;
+  stroke: none !important;
 }
 
 .dot {
@@ -693,4 +704,43 @@
 }
 [data-theme='dark'] .ingredients .ing-row {
   border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ==== Dark theme: rating-mail input görünürlük fix ==== */
+[data-theme='dark'] .rating-email {
+  color: #fff; /* yazı rengi */
+  caret-color: #fff; /* imleç rengi */
+  background: transparent; /* mevcut tasarım korunur */
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* placeholder'ı da aydınlat */
+[data-theme='dark'] .rating-email::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* focus durumunda sınır ve gölge: mevcut yeşil ile uyumlu */
+[data-theme='dark'] .rating-email:focus {
+  border-color: var(--main-green, #9bb537);
+  box-shadow: 0 0 0 2px rgba(155, 181, 55, 0.25);
+}
+
+/* seçili (highlight) metnin rengi/zemini: okunur kalsın */
+[data-theme='dark'] .rating-email::selection {
+  background: rgba(155, 181, 55, 0.35); /* yeşilimsi highlight */
+  color: #fff;
+}
+
+/* Chrome/Edge/Safari autofill durumunda yazı rengi ve arkaplan */
+[data-theme='dark'] .rating-email:-webkit-autofill {
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+  transition: background-color 99999s ease-in-out 0s; /* sarımsı autofill zeminini gizler */
+  box-shadow: 0 0 0px 1000px transparent inset !important; /* iç zemin şeffaf */
+}
+
+/* Geçici: bazı temalarda input global color'ı override edebiliyor; bu garantiye alır */
+[data-theme='dark'] .rating-email,
+[data-theme='dark'] .rating-email * {
+  color: #fff;
 }

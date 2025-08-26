@@ -40,6 +40,7 @@ body {
   --input-text-color2: rgba(5, 5, 5, 0.8);
   --input-text-color-3: #f8f8f8;
   --input-text-color-4: #f8f8f8;
+  --star-gray-color: rgba(255, 255, 255, 0.2);
 }
 [data-theme='dark'] {
   --main-green: #9bb537;

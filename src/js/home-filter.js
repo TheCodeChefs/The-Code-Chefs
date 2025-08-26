@@ -26,15 +26,19 @@ const recipesPerPage = 9;
 // Favoriler (LS)
 let favorites = [];
 
+function getIdSafe(obj) {
+  return obj?._id || obj?.id || obj?.recipeId || '';
+}
+
 function isInFavorites(id) {
-  return favorites.some(item => String(item._id) === String(id));
+  const target = String(id);
+  return favorites.some(item => String(getIdSafe(item)) === target);
 }
 
 function saveFavoritesToLocalStorage() {
   localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
-// ✅ Düzeltilmiş: push yerine direkt atama
 function loadFavoritesFromLocalStorage() {
   const favs = localStorage.getItem('favorites');
   if (favs) {
@@ -48,6 +52,26 @@ function loadFavoritesFromLocalStorage() {
   } else {
     favorites = [];
   }
+}
+
+/* --- EKLENDİ: Favori kaydı normalize (mutlaka _id olsun) --- */
+function makeFavoritePayload(src) {
+  const _id = String(getIdSafe(src) || '');
+  return {
+    ...src,
+    _id,
+    title: src?.title || '',
+    description: src?.description || '',
+    rating: Number(src?.rating) || 0,
+    preview:
+      src?.preview || src?.thumb || src?.image_url || src?.imageUrl || '',
+    category:
+      typeof src?.category === 'string'
+        ? { name: src.category }
+        : src?.category?.name
+        ? src.category
+        : src?.category || {},
+  };
 }
 
 async function loadCategories() {
@@ -219,7 +243,7 @@ async function fetchAndRenderRecipes(page = 1) {
     emptyRecipeGridEl.innerHTML = '';
     renderRecipes(recipes);
 
-    // ✅ İlk çizimde görünen kalpleri LS ile eşitle
+    // İlk çizimde görünen kalpleri LS ile eşitle
     refreshAllVisibleHearts();
 
     renderPagination(totalPages, currentPage);
@@ -258,24 +282,32 @@ function renderRating(rating) {
   return str;
 }
 
+/* === FAVORI KALP IKONLARI (inline SVG, tema bağımsız) === */
 function renderFavoriteIcon(id) {
-  const isFavorite = isInFavorites(id);
-  return isFavorite
-    ? `<svg
-            class="icon-white-heart"
-            viewBox="0 0 24 24"
-        >
-            <use href="./svg/symbol-defs.svg#icon-white-heart"></use>
-        </svg>`
-    : `<svg
-            class="icon-heart"
-            viewBox="0 0 24 24"
-        >
-            <use href="./svg/symbol-defs.svg#icon-heart"></use>
-        </svg>`;
+  const fav = isInFavorites(id);
+
+  if (fav) {
+    // DOLU: tamamen beyaz
+    return `
+      <svg class="icon-heart-full" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+        <path
+          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          fill="#fff" stroke="none"></path>
+      </svg>`;
+  }
+
+  // BOŞ: iç boyamasız, beyaz kontur
+  return `
+    <svg class="icon-heart-outline" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+      <path
+        d="M12.1 21.3l-.1.1-.1-.1C6.14 16.24 3 13.39 3 9.88 3 7.5 4.99 5.5 7.37 5.5c1.52 0 2.99.72 3.88 1.86.89-1.14 2.36-1.86 3.88-1.86C18.51 5.5 20.5 7.5 20.5 9.88c0 3.51-3.14 6.36-8.4 11.42z"
+        fill="none" stroke="#fff" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round"
+        vector-effect="non-scaling-stroke"></path>
+    </svg>`;
 }
 
-// --- ADD: tek butonun kalbini yenile
+// --- tek butonun kalbini yenile
 function refreshHeartById(id) {
   const safeId = String(id);
   const btn = document.getElementById(`favorite-button-${safeId}`);
@@ -283,7 +315,7 @@ function refreshHeartById(id) {
   btn.innerHTML = renderFavoriteIcon(safeId);
 }
 
-// --- ADD: görünür tüm kalpleri LS'e göre eşitle
+// --- görünür tüm kalpleri LS'e göre eşitle
 function refreshAllVisibleHearts() {
   const btns = document.querySelectorAll(
     '.favorite-btn[id^="favorite-button-"]'
@@ -312,9 +344,9 @@ function renderRecipes(recipes) {
     const ratingValue = parseFloat(recipe.rating).toFixed(1);
 
     card.innerHTML = `
-     <button id='favorite-button-${
-       recipe._id
-     }' class="favorite-btn">${renderFavoriteIcon(recipe._id)}</button>
+     <button id='favorite-button-${recipe._id}' class="favorite-btn">
+       ${renderFavoriteIcon(recipe._id)}
+     </button>
      
       <div class="home-recipe-card-bottom">
         <div class="home-recipe-card-desc">
@@ -334,9 +366,12 @@ function renderRecipes(recipes) {
       </div>
     `;
 
-    // Home içinde kendi kalbini toggle (LS + ikon)
-    card.querySelector('.favorite-btn').addEventListener('click', () => {
-      toggleFavorite(recipe);
+    // Favori butonu: tıklamada sadece favoriyi değiştir (LS + ikon)
+    const favBtn = card.querySelector('.favorite-btn');
+    favBtn.addEventListener('click', ev => {
+      ev.preventDefault();
+      ev.stopPropagation(); // kart/popup click'ine bulaşmasın
+      toggleFavorite(recipe); // LS'e ekle/çıkar + ikon güncelle (ve gerekiyorsa refresh)
     });
 
     // Popup açma
@@ -354,27 +389,41 @@ function renderRecipes(recipes) {
 }
 
 export function toggleFavorite(recipe, byPassLocalSave = false) {
-  if (isInFavorites(recipe._id)) {
-    favorites = favorites.filter(
-      item => String(item._id) !== String(recipe._id)
-    );
+  // her tıklamada en güncel LS'i baz al
+  loadFavoritesFromLocalStorage();
+
+  const id = String(getIdSafe(recipe));
+  const wasFavorite = isInFavorites(id);
+
+  if (wasFavorite) {
+    favorites = favorites.filter(item => String(getIdSafe(item)) !== id);
   } else {
-    favorites.push(recipe);
+    // 🔧 EKLEME: normalize ederek kaydet (_id garanti)
+    favorites.push(makeFavoritePayload(recipe));
   }
 
-  const favoriteButton = document.getElementById(
-    `favorite-button-${recipe._id}`
-  );
-
+  const favoriteButton = document.getElementById(`favorite-button-${id}`);
   if (favoriteButton) {
-    favoriteButton.innerHTML = renderFavoriteIcon(recipe._id);
+    favoriteButton.innerHTML = renderFavoriteIcon(id); // ikon renk/çizgi doğru kalır
   }
 
-  !byPassLocalSave && saveFavoritesToLocalStorage();
+  if (!byPassLocalSave) saveFavoritesToLocalStorage();
 
-  // --- ADD: favorites sayfası için geniş yayın (opsiyonel ama faydalı)
+  // favorites sayfaları için yayın
   window.dispatchEvent(new Event('favorites:updated'));
   document.dispatchEvent(new Event('favorites:updated'));
+
+  /* === İSTEDİĞİN REFRESH DAVRANIŞI ===
+     - home-filter.html: sadece EKLEME olduğunda (wasFavorite === false) sayfayı yenile
+     - favorites-filter.html: ekleme/çıkarma fark etmeden yenile
+  */
+  const path = (window.location && window.location.pathname) || '';
+  if (!wasFavorite && path.includes('home-filter.html')) {
+    window.location.reload();
+  }
+  if (path.includes('favorites-filter.html')) {
+    window.location.reload();
+  }
 }
 
 function renderPagination(totalPages, currentPage) {
@@ -518,7 +567,7 @@ async function loadPopularRecipes() {
   }
 }
 
-/* --- ADD: popup'tan tek-id güncelleme + dış senk --- */
+/* --- popup'tan tek-id güncelleme + dış senk --- */
 window.addEventListener('favorites:sync', e => {
   const id = e?.detail?.id;
   if (!id) return;

@@ -685,3 +685,41 @@ select option {
     margin-left: -10px; /* hafif sola kaydır */
   }
 }
+
+/* (Opsiyonel) Dark modda bazı çizgileri ve metayı netleştir */
+[data-theme='dark'] .meta-line {
+  color: #f0f0f0;
+}
+[data-theme='dark'] .ingredients .ing-row {
+  border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+/* === FAVORI KALPLER — her temada doğru görünüm === */
+/* karışım/filtre kapalı, tıklama butona gitsin */
+.favorite-btn,
+.favorite-btn svg {
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+.favorite-btn svg {
+  width: 24px; /* kalp boyutu */
+  height: 24px;
+  display: block;
+  pointer-events: none;
+}
+
+/* dolu kalp: tamamen beyaz */
+.icon-heart-full path {
+  fill: #fff !important;
+  stroke: none !important;
+}
+
+/* boş kalp: iç boyamasız, beyaz kontur */
+.icon-heart-outline path {
+  fill: none !important;
+  stroke: #fff !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  vector-effect: non-scaling-stroke;
+}

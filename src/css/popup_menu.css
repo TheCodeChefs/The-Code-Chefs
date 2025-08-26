@@ -182,7 +182,7 @@
   display: block;
 }
 
-/* ⭐ Popup menü yıldız renkleri */
+/* ⭐ DOLU YILDIZ */
 .star-row .star.filled .icon {
   width: 18px;
   height: 18px;
@@ -194,16 +194,14 @@
   stroke: none;
 }
 
-/* ====== BOŞ YILDIZ TEMA DEĞİŞKENİ (EKLENDİ) ====== */
+/* ⭐ BOŞ YILDIZ — tema değişkeni */
 :root,
 [data-theme='light'] {
-  --star-empty: rgba(0, 0, 0, 0.2);
-} /* light: gri %20 */
+  --star-empty: rgba(0, 0, 0, 0.2); /* light */
+}
 [data-theme='dark'] {
-  --star-empty: rgba(255, 255, 255, 0.2);
-} /* dark: beyaz %20 */
-
-/* Boş yıldızlar tek yerden yönetilir */
+  --star-empty: rgba(255, 255, 255, 0.2); /* dark */
+}
 .star-row .star.empty .icon,
 .star-row .star.empty .icon *,
 .star-row .star.empty .icon use {
@@ -420,6 +418,11 @@
   padding: 0;
   margin: 0;
 }
+/* A11y uyumu: JS role="group" eklerse hizalama */
+.rating-stars[role='group'] {
+  display: inline-flex;
+  gap: 2px;
+}
 .star-container {
   position: relative;
   width: 24px;
@@ -627,7 +630,6 @@
 }
 
 /* ===================== POPUP LAYOUT FIX (>=768px) ===================== */
-/* Mobilde mevcut akış kalsın; tablet/desktop’ta tags solda, rating/meta sağda */
 @media (min-width: 768px) {
   .popup-content {
     display: grid;
@@ -708,38 +710,31 @@
 
 /* ==== Dark theme: rating-mail input görünürlük fix ==== */
 [data-theme='dark'] .rating-email {
-  color: #fff; /* yazı rengi */
-  caret-color: #fff; /* imleç rengi */
-  background: transparent; /* mevcut tasarım korunur */
+  color: #fff;
+  caret-color: #fff;
+  background: transparent;
   border-color: rgba(255, 255, 255, 0.35);
 }
-
-/* placeholder'ı da aydınlat */
 [data-theme='dark'] .rating-email::placeholder {
   color: rgba(255, 255, 255, 0.55);
 }
-
-/* focus durumunda sınır ve gölge: mevcut yeşil ile uyumlu */
 [data-theme='dark'] .rating-email:focus {
   border-color: var(--main-green, #9bb537);
   box-shadow: 0 0 0 2px rgba(155, 181, 55, 0.25);
 }
-
-/* seçili (highlight) metnin rengi/zemini: okunur kalsın */
+/* metin seçimi */
 [data-theme='dark'] .rating-email::selection {
-  background: rgba(155, 181, 55, 0.35); /* yeşilimsi highlight */
+  background: rgba(155, 181, 55, 0.35);
   color: #fff;
 }
-
-/* Chrome/Edge/Safari autofill durumunda yazı rengi ve arkaplan */
+/* autofill */
 [data-theme='dark'] .rating-email:-webkit-autofill {
   -webkit-text-fill-color: #fff !important;
   caret-color: #fff;
-  transition: background-color 99999s ease-in-out 0s; /* sarımsı autofill zeminini gizler */
-  box-shadow: 0 0 0px 1000px transparent inset !important; /* iç zemin şeffaf */
+  transition: background-color 99999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
 }
-
-/* Geçici: bazı temalarda input global color'ı override edebiliyor; bu garantiye alır */
+/* bazı temalarda global override'a karşı garanti */
 [data-theme='dark'] .rating-email,
 [data-theme='dark'] .rating-email * {
   color: #fff;

@@ -78,7 +78,7 @@ function enforceEmptyStarColor(root) {
     u.setAttribute('fill', color);
   });
 
-  // Inline path'leri ez (external sprite'ta path görünmeyebilir, sorun değil)
+  // Inline path (external sprite’ta olmayabilir, sorun değil)
   qsa('.star.empty .icon path', root).forEach(p => {
     p.setAttribute('fill', color);
     p.setAttribute('stroke', 'none');
@@ -305,7 +305,8 @@ document.addEventListener('click', e => {
   if (e.target.closest('.popup-x') || (r.overlay && e.target === r.overlay)) {
     hide(r.overlay);
     document.documentElement.style.overflow = '';
-    r.pmIframe && (r.pmIframe.src = '');
+    // src='' yerine about:blank
+    if (r.pmIframe) r.pmIframe.src = 'about:blank';
   }
 });
 window.addEventListener('keydown', e => {
@@ -317,7 +318,8 @@ window.addEventListener('keydown', e => {
   }
   hide(r.overlay);
   document.documentElement.style.overflow = '';
-  r.pmIframe && (r.pmIframe.src = '');
+  // src='' yerine about:blank
+  if (r.pmIframe) r.pmIframe.src = 'about:blank';
 });
 
 /* = Fav buton = */
@@ -369,6 +371,35 @@ __themeObserver.observe(document.documentElement, {
   attributeFilter: ['data-theme'],
 });
 
+/* === A11y fix: rating-stars için role/label === */
+function fixRatingStarsA11y() {
+  const titleEl =
+    qs('#rating-title') || qs('.rating-title') || qs('h3.rating-title');
+  const starsEl = qs('#rating-stars');
+
+  if (!starsEl) return;
+
+  // aria-label misuse'u kaldır
+  starsEl.removeAttribute('aria-label');
+
+  // group rolü ve başlığa referans
+  starsEl.setAttribute('role', 'group');
+
+  if (titleEl) {
+    // id garanti altına al
+    if (!titleEl.id) titleEl.id = 'rating-title';
+    starsEl.setAttribute('aria-labelledby', titleEl.id);
+  } else {
+    // yedek: anlamlı kısa bir label ver
+    starsEl.setAttribute('aria-label', 'Rating stars');
+  }
+}
+
+// Aç/kapat eventleri ve DOM hazır olunca A11y düzeltmesini uygula
+document.addEventListener('DOMContentLoaded', () => {
+  fixRatingStarsA11y();
+});
+
 document.addEventListener('click', e => {
   const r = refs();
   if (e.target.closest('#pm-rate-btn')) {
@@ -385,6 +416,9 @@ document.addEventListener('click', e => {
     r.ratingSend && (r.ratingSend.disabled = true);
     clearRatingStars(r.ratingStars);
     show(r.ratingOverlay);
+
+    // emniyet: her açılışta a11y düzeltmesi yerinde olsun
+    fixRatingStarsA11y();
     return;
   }
   if (
